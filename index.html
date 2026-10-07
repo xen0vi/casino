@@ -4181,7 +4181,7 @@ class Component extends DCLogic {
       else if (pBJ && !dBJ) { result = 'blackjack'; pay = h.bet * 2.5; }
       else if (dBJ && !pBJ) result = 'lose';
       else if (d > 21 || p > d) { result = 'win'; pay = h.bet * (p === 21 ? 2.5 : 2); }
-      else if (p === d) { result = 'push'; pay = h.bet; }
+      else if (p === d) { result = p === 21 ? 'push21' : 'push'; pay = p === 21 ? h.bet * 1.5 : h.bet; }
       else result = 'lose';
       payout += pay;
       return { ...h, done: true, result };
@@ -4189,7 +4189,7 @@ class Component extends DCLogic {
     const net = payout - staked, bank = this.state.bank + payout;
     let message, tone;
     if (hands.length === 1 && hands[0].result === 'blackjack') { message = `Blackjack! ${signed(net)}`; tone = 'win'; }
-    else if (net > 0) { message = `${d > 21 ? 'Dealer busts. ' : ''}You win ${signed(net)}`; tone = 'win'; }
+    else if (net > 0) { message = `${d > 21 ? 'Dealer busts. ' : hands.length === 1 && hands[0].result === 'push21' ? '21 push. ' : ''}You win ${signed(net)}`; tone = 'win'; }
     else if (net === 0) { message = 'Push'; tone = 'neutral'; }
     else { message = (dBJ ? 'Dealer blackjack. ' : hands.every(h => h.result === 'bust') ? 'Bust. ' : 'Dealer wins. ') + signed(net); tone = 'lose'; }
     this.setState({ dealer, hands, bank, phase: 'done', active: -1, message, tone, bet: Math.min(this.state.lastBet, bank) });
@@ -4305,7 +4305,7 @@ class Component extends DCLogic {
       if (isBJ(cards) && !cards.some(c => c.down)) return 'Blackjack';
       return sc.soft && sc.total < 21 ? `${sc.total - 10} / ${sc.total}` : `${sc.total}`;
     };
-    const RES = { win: ['Win', GREEN], blackjack: ['Blackjack', GOLD], push: ['Push', '#bdb9b0'], lose: ['Lose', RED], bust: ['Bust', RED] };
+    const RES = { win: ['Win', GREEN], blackjack: ['Blackjack', GOLD], push: ['Push', '#bdb9b0'], push21: ['21 Push +½', GREEN], lose: ['Lose', RED], bust: ['Bust', RED] };
     const btn = (label, key, onClick, enabled, primary) => ({
       label, key, onClick, disabled: !enabled, opacity: enabled ? 1 : 0.35,
       bg: primary ? GOLD : th.panel, color: primary ? '#15130e' : INK, border: primary ? GOLD : 'rgba(255,255,255,0.14)'
@@ -4675,7 +4675,7 @@ class Component extends DCLogic {
       broke: H.phase !== 'play' && me.stack < HE_BB, rebuy: this.heRebuy
     };
 
-    const RESL = { win: ['Win', GREEN], blackjack: ['Blackjack', GOLD], push: ['Push', '#bdb9b0'], lose: ['Lose', RED], bust: ['Bust', RED] };
+    const RESL = { win: ['Win', GREEN], blackjack: ['Blackjack', GOLD], push: ['Push', '#bdb9b0'], push21: ['21 Push +½', GREEN], lose: ['Lose', RED], bust: ['Bust', RED] };
     const bjHist = {
       empty: s.bjHistory.length === 0,
       rows: s.bjHistory.map(e => ({
@@ -4733,7 +4733,7 @@ class Component extends DCLogic {
         tcpRows: TCP_GUIDE.map((g, i) => ({ n: i + 1, name: g[0], cards: parseCards(g[1]), desc: g[2], pp: PP_PAY[g[3]] ? PP_PAY[g[3]] + ' to 1' : '—', ab: BONUS_PAY[g[3]] ? BONUS_PAY[g[3]] + ' to 1' : '—', pct: g[4] })),
         ups: BJ_UPS, bjSections: BJ_CHART,
         legend: Object.values(BJ_KEY).map(v => ({ k: v[0], bg: v[1], label: v[2] })),
-        bjRules: `${this.decks()} decks · Blackjack and any winning 21 pay 3 to 2 · Dealer ${this.h17() ? 'hits' : 'stands on'} soft 17 · Double on any first two cards · Split once; split aces get one card each`
+        bjRules: `${this.decks()} decks · Blackjack and any winning 21 pay 3 to 2 · A 21 that ties the dealer pays 1 to 2 · Dealer ${this.h17() ? 'hits' : 'stands on'} soft 17 · Double on any first two cards · Split once; split aces get one card each`
       },
       soundState: s.sSound ? 'On' : 'Off', soundStateColor: s.sSound ? GOLD : '#8a8780', soundBorder: s.sSound ? GOLD : 'rgba(255,255,255,0.12)',
       toggleSettings: () => this.setState(x => ({ showSettings: !x.showSettings })),
@@ -4780,7 +4780,7 @@ class Component extends DCLogic {
         return { show: false };
       })(),
       rulesText: isBJGame
-        ? `${this.decks()} deck${this.decks() > 1 ? 's' : ''} · Blackjack and any winning 21 pay 3 to 2 · Dealer ${h17 ? 'hits' : 'stands on'} soft 17`
+        ? `${this.decks()} deck${this.decks() > 1 ? 's' : ''} · Blackjack and any winning 21 pay 3 to 2 · A 21 that ties the dealer pays 1 to 2 · Dealer ${h17 ? 'hits' : 'stands on'} soft 17`
         : 'Single deck · Dealer qualifies with Queen high',
       isBJ: isBJGame, isTCP: s.game === 'tcp', isSlot: isSlotGame,
       bj, tcp
