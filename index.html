@@ -3014,9 +3014,9 @@ button:active:not(:disabled){transform:scale(0.95);}
 <script type="text/x-dc" data-dc-script>
 const SUITS = ['♠', '♥', '♦', '♣'];
 const RANKS = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
-const CHIPS = [100, 500, 1000, 2500, 5000];
-const chipFor = a => { let c = '#1e1e1e'; for (const v of [100, 500, 1000, 2500, 5000]) if (a >= v) c = CHIP_BG[v]; return c; };
-const CHIP_BG = { 100: '#1e1e1e', 500: '#5b3a8c', 1000: '#d4ad55', 2500: '#c24d72', 5000: '#d06a26' };
+const CHIPS = [500, 1000, 2500, 5000, 10000];
+const chipFor = a => { let c = '#1e1e1e'; for (const v of [100, 500, 1000, 2500, 5000, 10000]) if (a >= v) c = CHIP_BG[v]; return c; };
+const CHIP_BG = { 100: '#1e1e1e', 500: '#5b3a8c', 1000: '#d4ad55', 2500: '#c24d72', 5000: '#d06a26', 10000: '#1f8a6e' };
 const STORE = 'casino-v1';
 const fmt = n => '$' + Math.round(n).toLocaleString();
 const signed = n => n > 0 ? '+' + fmt(n) : n < 0 ? '−' + fmt(-n) : fmt(0);
@@ -3338,8 +3338,8 @@ class Component extends DCLogic {
       stats: { bj: saved.stats?.bj || emptyStats(), tcp: saved.stats?.tcp || emptyStats(), slot: saved.stats?.slot || emptyStats(), holdem: saved.stats?.holdem || emptyStats(), uth: saved.stats?.uth || emptyStats(), roulette: saved.stats?.roulette || emptyStats(), bac: saved.stats?.bac || emptyStats(), vp: saved.stats?.vp || emptyStats() },
       log: saved.log || [],
       bBank: saved.bacBank ?? start, bBets: {}, bLastBets: null, bTarget: 'banker', bPhase: 'betting', bP: [], bB: [], bShoe: [], bMsg: 'Bet Player, Banker or Tie — then deal', bTone: 'neutral', bRoad: saved.bacRoad || [], bWin: null,
-      vBank: saved.vpBank ?? start, vCoin: 100, vCoins: 5, vPhase: 'idle', vHand: [], vHold: [false, false, false, false, false], vDeck: [], vMsg: 'Jacks or Better · 9/6 full pay', vTone: 'neutral', vKey: null, vRec: null, vNote: null, vGen: 0,
-      rBank: saved.rlBank ?? start, rBets: {}, rStack: [], rChip: 100, rSpinning: false, rWheel: 0, rBall: 0, rBallTop: 33, rBallPhase: 'idle', rLast: null, rHist: saved.rlHist || [], rLog: saved.rlLog || [], rMsg: 'Pick a chip, tap the board, then spin', rTone: 'neutral', rWinKeys: [],
+      vBank: saved.vpBank ?? start, vCoin: 500, vCoins: 5, vPhase: 'idle', vHand: [], vHold: [false, false, false, false, false], vDeck: [], vMsg: 'Jacks or Better · 9/6 full pay', vTone: 'neutral', vKey: null, vRec: null, vNote: null, vGen: 0,
+      rBank: saved.rlBank ?? start, rBets: {}, rStack: [], rChip: 500, rSpinning: false, rWheel: 0, rBall: 0, rBallTop: 33, rBallPhase: 'idle', rLast: null, rHist: saved.rlHist || [], rLog: saved.rlLog || [], rMsg: 'Pick a chip, tap the board, then spin', rTone: 'neutral', rWinKeys: [],
       uBank: saved.uthBank ?? start, uAnte: 0, uTrips: 0, uTarget: 'ante', uPhase: 'betting', uPlayer: [], uDealer: [], uBoard: [], uShown: 0, uPlay: 0, uResults: null, uMsg: 'Place your Ante (Blind matches it) and optional Trips', uTone: 'neutral', uNote: null,
       theme: saved.themeV2 ? (saved.theme || 'blue') : 'blue', vw: typeof window !== 'undefined' ? window.innerWidth : 1200, showGuide: false, guideTab: 'he', bjHistory: saved.bjHistory || [], showSettings: false, heV: 0, heRaise: 0,
       sBank: saved.slotBank ?? start, sBetIdx: saved.sBetIdx ?? 2, sTurbo: saved.sTurbo ?? false, sSound: saved.sSound ?? true,
