@@ -2172,7 +2172,7 @@ button:active:not(:disabled){transform:scale(0.95);}
         <div style="display:flex;flex-direction:column;align-items:center;gap:2px;margin:-6px 0 -8px;">
           <svg viewBox="0 0 600 64" style="width:100%;max-width:400px;height:auto;display:block;overflow:visible;">
             <defs><path id="bjArc" d="M 30 8 Q 300 84 570 8" fill="none"></path></defs>
-            <text text-anchor="middle" style="font-family:Geist,sans-serif;font-size:22px;font-weight:600;letter-spacing:6px;fill:#e2cf96;"><textPath href="#bjArc" startOffset="50%">ANY 21 PAYS 3 TO 2</textPath></text>
+            <text text-anchor="middle" style="font-family:Geist,sans-serif;font-size:22px;font-weight:600;letter-spacing:6px;fill:#e2cf96;"><textPath href="#bjArc" startOffset="50%">ANY 21 PAYS 5 TO 4</textPath></text>
           </svg>
           <div style="font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:{{ th.soft }};text-align:center;">{{ bj.dealerRule }}</div>
         </div>
@@ -4183,10 +4183,10 @@ class Component extends DCLogic {
       staked += h.bet;
       let result, pay = 0;
       if (p > 21) result = 'bust';
-      else if (pBJ && !dBJ) { result = 'blackjack'; pay = h.bet * 2.5; }
+      else if (pBJ && !dBJ) { result = 'blackjack'; pay = h.bet * 2.25; }
       else if (dBJ && !pBJ) result = 'lose';
-      else if (d > 21 || p > d) { result = 'win'; pay = h.bet * (p === 21 ? 2.5 : 2); }
-      else if (p === d) { result = p === 21 ? 'push21' : 'push'; pay = p === 21 ? h.bet * 1.5 : h.bet; }
+      else if (d > 21 || p > d) { result = 'win'; pay = h.bet * (p === 21 ? 2.25 : 2); }
+      else if (p === d) { result = p === 21 ? 'push21' : 'push'; pay = p === 21 ? h.bet * 1.25 : h.bet; }
       else result = 'lose';
       payout += pay;
       return { ...h, done: true, result };
@@ -4310,7 +4310,7 @@ class Component extends DCLogic {
       if (isBJ(cards) && !cards.some(c => c.down)) return 'Blackjack';
       return sc.soft && sc.total < 21 ? `${sc.total - 10} / ${sc.total}` : `${sc.total}`;
     };
-    const RES = { win: ['Win', GREEN], blackjack: ['Blackjack', GOLD], push: ['Push', '#bdb9b0'], push21: ['21 Push +½', GREEN], lose: ['Lose', RED], bust: ['Bust', RED] };
+    const RES = { win: ['Win', GREEN], blackjack: ['Blackjack', GOLD], push: ['Push', '#bdb9b0'], push21: ['21 Push +¼', GREEN], lose: ['Lose', RED], bust: ['Bust', RED] };
     const btn = (label, key, onClick, enabled, primary) => ({
       label, key, onClick, disabled: !enabled, opacity: enabled ? 1 : 0.35,
       bg: primary ? GOLD : th.panel, color: primary ? '#15130e' : INK, border: primary ? GOLD : 'rgba(255,255,255,0.14)'
@@ -4680,7 +4680,7 @@ class Component extends DCLogic {
       broke: H.phase !== 'play' && me.stack < HE_BB, rebuy: this.heRebuy
     };
 
-    const RESL = { win: ['Win', GREEN], blackjack: ['Blackjack', GOLD], push: ['Push', '#bdb9b0'], push21: ['21 Push +½', GREEN], lose: ['Lose', RED], bust: ['Bust', RED] };
+    const RESL = { win: ['Win', GREEN], blackjack: ['Blackjack', GOLD], push: ['Push', '#bdb9b0'], push21: ['21 Push +¼', GREEN], lose: ['Lose', RED], bust: ['Bust', RED] };
     const bjHist = {
       empty: s.bjHistory.length === 0,
       rows: s.bjHistory.map(e => ({
@@ -4738,7 +4738,7 @@ class Component extends DCLogic {
         tcpRows: TCP_GUIDE.map((g, i) => ({ n: i + 1, name: g[0], cards: parseCards(g[1]), desc: g[2], pp: PP_PAY[g[3]] ? PP_PAY[g[3]] + ' to 1' : '—', ab: BONUS_PAY[g[3]] ? BONUS_PAY[g[3]] + ' to 1' : '—', pct: g[4] })),
         ups: BJ_UPS, bjSections: BJ_CHART,
         legend: Object.values(BJ_KEY).map(v => ({ k: v[0], bg: v[1], label: v[2] })),
-        bjRules: `${this.decks()} decks · Blackjack and any winning 21 pay 3 to 2 · A 21 that ties the dealer pays 1 to 2 · Dealer ${this.h17() ? 'hits' : 'stands on'} soft 17 · Double on any first two cards · Split once; split aces get one card each`
+        bjRules: `${this.decks()} decks · Blackjack and any winning 21 pay 5 to 4 · A 21 that ties the dealer pays 1 to 4 · Dealer ${this.h17() ? 'hits' : 'stands on'} soft 17 · Double on any first two cards · Split once; split aces get one card each`
       },
       soundState: s.sSound ? 'On' : 'Off', soundStateColor: s.sSound ? GOLD : '#8a8780', soundBorder: s.sSound ? GOLD : 'rgba(255,255,255,0.12)',
       toggleSettings: () => this.setState(x => ({ showSettings: !x.showSettings })),
@@ -4785,7 +4785,7 @@ class Component extends DCLogic {
         return { show: false };
       })(),
       rulesText: isBJGame
-        ? `${this.decks()} deck${this.decks() > 1 ? 's' : ''} · Blackjack and any winning 21 pay 3 to 2 · A 21 that ties the dealer pays 1 to 2 · Dealer ${h17 ? 'hits' : 'stands on'} soft 17`
+        ? `${this.decks()} deck${this.decks() > 1 ? 's' : ''} · Blackjack and any winning 21 pay 5 to 4 · A 21 that ties the dealer pays 1 to 4 · Dealer ${h17 ? 'hits' : 'stands on'} soft 17`
         : 'Single deck · Dealer qualifies with Queen high',
       isBJ: isBJGame, isTCP: s.game === 'tcp', isSlot: isSlotGame,
       bj, tcp
