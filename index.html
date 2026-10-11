@@ -2172,7 +2172,7 @@ button:active:not(:disabled){transform:scale(0.95);}
         <div style="display:flex;flex-direction:column;align-items:center;gap:2px;margin:-6px 0 -8px;">
           <svg viewBox="0 0 600 64" style="width:100%;max-width:400px;height:auto;display:block;overflow:visible;">
             <defs><path id="bjArc" d="M 30 8 Q 300 84 570 8" fill="none"></path></defs>
-            <text text-anchor="middle" style="font-family:Geist,sans-serif;font-size:22px;font-weight:600;letter-spacing:6px;fill:#e2cf96;"><textPath href="#bjArc" startOffset="50%">ACE BLACKJACK PAYS 5 TO 4</textPath></text>
+            <text text-anchor="middle" style="font-family:Geist,sans-serif;font-size:22px;font-weight:600;letter-spacing:6px;fill:#e2cf96;"><textPath href="#bjArc" startOffset="50%">ACE BLACKJACK PAYS 3 TO 2</textPath></text>
           </svg>
           <div style="font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:{{ th.soft }};text-align:center;">{{ bj.dealerRule }}</div>
         </div>
@@ -4184,7 +4184,7 @@ class Component extends DCLogic {
       staked += h.bet;
       let result, pay = 0;
       if (p > 21) result = 'bust';
-      else if (aceBJ) { result = 'blackjack'; pay = h.bet * 2.25; }
+      else if (aceBJ) { result = 'blackjack'; pay = h.bet * 2.5; }
       else if (pBJ && !dBJ) { result = 'win'; pay = h.bet * 2; }
       else if (dBJ && !pBJ) result = 'lose';
       else if (d > 21 || p > d) { result = 'win'; pay = h.bet * 2; }
@@ -4740,7 +4740,7 @@ class Component extends DCLogic {
         tcpRows: TCP_GUIDE.map((g, i) => ({ n: i + 1, name: g[0], cards: parseCards(g[1]), desc: g[2], pp: PP_PAY[g[3]] ? PP_PAY[g[3]] + ' to 1' : '—', ab: BONUS_PAY[g[3]] ? BONUS_PAY[g[3]] + ' to 1' : '—', pct: g[4] })),
         ups: BJ_UPS, bjSections: BJ_CHART,
         legend: Object.values(BJ_KEY).map(v => ({ k: v[0], bg: v[1], label: v[2] })),
-        bjRules: `${this.decks()} decks · Ace-first blackjack pays 5 to 4 and always wins, even against a dealer blackjack · Other wins pay 1 to 1 · Dealer ${this.h17() ? 'hits' : 'stands on'} soft 17 · Double on any first two cards · Split once; split aces get one card each`
+        bjRules: `${this.decks()} decks · Ace-first blackjack pays 3 to 2 and always wins, even against a dealer blackjack · Other wins pay 1 to 1 · Dealer ${this.h17() ? 'hits' : 'stands on'} soft 17 · Double on any first two cards · Split once; split aces get one card each`
       },
       soundState: s.sSound ? 'On' : 'Off', soundStateColor: s.sSound ? GOLD : '#8a8780', soundBorder: s.sSound ? GOLD : 'rgba(255,255,255,0.12)',
       toggleSettings: () => this.setState(x => ({ showSettings: !x.showSettings })),
@@ -4787,7 +4787,7 @@ class Component extends DCLogic {
         return { show: false };
       })(),
       rulesText: isBJGame
-        ? `${this.decks()} deck${this.decks() > 1 ? 's' : ''} · Ace-first blackjack pays 5 to 4 and always wins, even against a dealer blackjack · Other wins pay 1 to 1 · Dealer ${h17 ? 'hits' : 'stands on'} soft 17`
+        ? `${this.decks()} deck${this.decks() > 1 ? 's' : ''} · Ace-first blackjack pays 3 to 2 and always wins, even against a dealer blackjack · Other wins pay 1 to 1 · Dealer ${h17 ? 'hits' : 'stands on'} soft 17`
         : 'Single deck · Dealer qualifies with Queen high',
       isBJ: isBJGame, isTCP: s.game === 'tcp', isSlot: isSlotGame,
       bj, tcp
